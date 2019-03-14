@@ -1,0 +1,222 @@
+<style>
+.form-control {
+	font-size: 1.3rem !important;
+}
+
+body {
+	font-size: 1.3rem !important;
+}
+ .modal-content{
+ 	width: 800px !important;
+ 	height:400px !important;
+ }
+ .modal-body{
+ 	overflow: scroll;
+ }
+</style>
+<div ng-include="'./templates/login/header.html'"></div>
+<div ng-include="'./templates/login/sidebar.html'"></div>
+<div class="page-wrapper">
+
+	<!-- ============================================================== -->
+	<!-- Container fluid  -->
+	<!-- ============================================================== -->
+	<div class="container-fluid">
+		<!-- Start Page Content -->
+		<div class="row">
+			<div class="col-12">
+				<div class="card card-top">
+					<div class="card-block ">
+						<form name="myForm">
+							<div class="row" style="margin-top: -5px;">
+								 
+								<div class="col-sm-2">
+									<label class="l1" ng-bind="(videoNameLable ) + '*'" ></label> 
+								</div>
+								<div class="col-sm-3">
+									<input type="text" id="videoName" ng-model="videoName" class="form-control" required="required">
+								</div>
+								
+								<div class="col-sm-2">
+									<label class="l1" ng-bind="(videoTypeLable ) + '*'"></label> 
+								</div>
+								<div class="col-sm-3">
+									<select id="videoType" ng-model="videoType"
+										class="form-control"
+										ng-options="u.vidsCategoryDetails for u in videoTypeList"
+										required>
+										<option value="">--Please select--</option>
+									</select>
+								</div>
+								
+							</div>
+							<div class="row" style="margin-top: -5px;">				
+								<div class="col-sm-2">
+									<label class="l1" ng-bind="(weekLable ) + '*'"></label> 
+								</div>
+								<div class="col-sm-3">									
+									<select class="form-control" id="week" ng-model="week" ng-options="u.weekDetails for u in weekList" required>
+										<option value="">--Please select--</option>
+									</select>
+								</div>							
+								
+								
+								<div class="col-sm-2">
+									<label class="l1" ng-bind="(videoStatusLable) + '*'" > </label> 
+								</div>
+								<div class="col-sm-3">
+									<select id="videoStatus" ng-model="videoStatus"
+										class="form-control"
+										ng-options="u.drillVidsStatusDetails for u in videoStatusList"
+										required>
+										<option value="">--Please select--</option>
+									</select>
+								</div>
+								
+							</div>
+							<div class="row" style="margin-top: -5px;">
+								
+								<div class="col-sm-2">
+									<label class="l1" ng-bind="videoSourceLable"></label> 
+								</div>
+								<div class="col-sm-3">
+									<select id="videoSource" ng-click="sourceChanged()"
+										class="form-control"></select>
+								</div>
+								
+								<div class="col-sm-2">
+									<label class="l1" ng-bind="audioSourceLable"> </label> 
+								</div>
+								<div class="col-sm-3">
+									<select id="audioSource" ng-click="sourceChanged()"
+										class="form-control"></select>
+								</div>
+
+								
+							</div>
+							<div class="row" style="margin-top: -5px;">
+								<div class="col-sm-12">
+									<div class="col-sm-2">
+										<label class="l1" ng-bind="(activitylabel) + '*'" style="margin-left: 5px;"></label>
+									</div>
+									<div class="col-sm-3" style="margin-left: -11px; padding-right: 0px">
+										<select class="form-control" id="activity" ng-model="activity" style="width: 248.5px;">
+											<option value="">--Please select--</option>
+											<option ng-repeat="s in activityList" required value="{{s.activity}}">{{s.activity}}</option>
+										</select>
+									</div>
+									<div class="col-sm-2">
+										<label class="l1" ng-bind="descriptionLable" style="margin-left: 30px;"></label> 
+									</div>
+									<div class="col-sm-3">
+										<textarea id="description" ng-model="description" class="form-control" style="margin-left: 13px;width: 248.5px;margin-bottom: 20px;"></textarea>
+									</div>
+									<div class="col-sm-2" >
+		                            	<button class="fa fa-eye" style="background-color: gainsboro;height: 40px;margin-top: 2px;" type="button" class="btn btn-primary float-right" ng-hide="isAdmin()" ng-click="evaluationLiveStreamRecruit()" ng-bind="parametricEvaluation" > </button>
+		                            </div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-sm-2  float-right" >
+				<div class="row text-center" ng-if="displayErrorMsg != ''"
+					style="width: 600px; margin-left: 10px;">
+					<h6>
+						<font color="red">{{displayErrorMsg }}</font>
+					</h6>
+				</div>
+				<div class="row text-center" ng-show="displaySuccessMsg != ''"
+					style="width: 600px; margin-left: 10px;">
+					<h6>
+						<font color="green">{{displaySuccessMsg }}</font>
+					</h6>
+				</div>
+				<div class="row text-center" ng-show="displaySuccessMsg != ''"
+					style="width: 600px; margin-left: 10px;">
+					<h6>
+						<font color="green">{{noCamraConnet }}</font>
+					</h6>
+				</div>
+			</div>
+			<div class="col-sm-10  float-right" style="margin-bottom:5px;  ">
+				<button class="btn btn-primary float-right"
+					style="font-weight: 600; margin-left: 20px; "
+					ng-click="backRecords()">
+					<i class="ti-arrow-left" style="font-weight: 600;"></i> Back
+				</button>
+				<button type="button" id="save" class="btn btn-success float-right" style="margin-left: 8px"
+					ng-click="saveVideo()" title="Save Video"
+					ng-disabled="saveDisabled">
+					<i class="fa fa-save"></i>
+				</button>
+				<button type="button" id="stop" class="btn btn-danger float-right" style="margin-left: 8px"
+					ng-disabled="stopDisabled" ng-click="getAudioVideoDevice()" title="Stop"> 
+					<i class="fa fa-stop"></i>
+				</button>
+				<button type="button" id="record"
+					class="btn btn-primary float-right"
+					ng-click="getAudioVideoDevice()" title="Record"
+					ng-disabled="recordDisabled">
+					<i class="fa fa-video-camera"></i>
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-sm-10" align="center">
+			<video id="video"
+				style="width: 100%; height: 100%; border: 0.5px solid black; overflow: scroll"></video>
+			<br />
+			<!-- <button id="takephoto-startbutton" class="btn btn-default btn-block" style="width:320px;"> Take photo</button> -->
+			<!-- <label class="l2" style=" margin-left: 950px;margin-bottom: 12px;color: green; font-size: 15px;"> Live Stream</label> -->
+
+ 	<!-- <img id="img">
+	<button id="snap" ng-click="takeSanpshot()">Snap Photo</button> -->
+		</div>
+		<!-- <div class="col-sm-2  float-right" style="margin-bottom:10px;  "> -->
+		<div class="col-sm-2" align="center">
+		<br/><br/><br/><br/><br/>
+			<div style="margin-left: -30px;">
+			<input type="file" width: 400px; demo-file-model="manualFile" class="form-control" id="manualFileField" />
+			</div>
+			<br/>
+			<div>
+			<button type="button" id="record" ng-disabled="disableManualUplButton"
+					class="btn btn-success float-center" style="font-weight: 600; margin-left: 20px; "
+					ng-click="saveManualVideo()">
+					Manual Upload
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<popup visible="showEvaluationLiveStreamRecruit">
+					<div class="row">
+						<div class="col-sm-12">
+							<label class="l1" style=""><span class="label label-success" style="margin-left: 250px; font-size: 20px;">Add Parameter Evaluation</span></label>
+						</div>
+					</div>
+					<div class="row" ng-if="evalDataAvailable" style="margin-left: 21px;">
+						<div class="col-sm-12" >
+							<div class="gridStyle" ng-grid="evalGridOptions"   ></div>
+						</div>
+					</div>
+					<div class="row" ng-if="displayEmptyEvalMsg != ''" style="margin-left: 21px;">
+						<h4><font color="red">{{ displayEmptyEvalMsg }}</font></h4>
+					</div>
+	</popup>
+	
+	<!-- ============================================================== -->
+	<!-- End PAge Content -->
+	<!-- ============================================================== -->
+
+	<!-- <div ng-include="'./templates/login/footer.html'"></div> -->
+
+</div>
+<!-- End Page wrapper  -->
